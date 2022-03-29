@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIManager : MonoBehaviour
+public class UIManager : Singleton<UIManager>
 {
-    [SerializeField] private Image fuelGauge;
-    [SerializeField] private Image hpGauge;
+    [SerializeField] private GaugeBackFront fuelGauge;
+    [SerializeField] private GaugeBackFront hpGauge;
+    [SerializeField] private Image expGauge;
     private Player player;
 
     private void Awake()
@@ -16,9 +17,22 @@ public class UIManager : MonoBehaviour
 
     void Update()
     {
-        fuelGauge.fillAmount = player.fuelGauge.GaugeBar / player.fuelGauge.MaxGaugeBar;
-        hpGauge.fillAmount = player.hpGauge.GaugeBar / player.hpGauge.MaxGaugeBar;
+        SetGauge(fuelGauge, player.fuelGauge.GaugeBar / player.fuelGauge.MaxGaugeBar);
+        SetGauge(hpGauge, player.hpGauge.GaugeBar / player.hpGauge.MaxGaugeBar);
+    }
+
+    private void SetGauge(GaugeBackFront gauge, float value)
+    {
+        gauge.front.fillAmount = value;
+        gauge.back.fillAmount = Mathf.Lerp(gauge.back.fillAmount, gauge.front.fillAmount, Time.deltaTime * 2f);
+        //if (gauge.front.fillAmount <= fuelGauge.back.fillAmount - 0.001f) gauge.back.fillAmount = gauge.front.fillAmount;
     }
 }
 
+[System.Serializable]
+public class GaugeBackFront
+{
+    public Image front;
+    public Image back;
+}
 //hp, fuel, 진행도, 미션, 

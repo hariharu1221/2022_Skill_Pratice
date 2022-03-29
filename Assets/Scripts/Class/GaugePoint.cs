@@ -5,9 +5,9 @@ using UnityEngine;
 [System.Serializable]
 public class GaugePoint
 {
-    public float MaxGaugeBar;
+    [SerializeField] public float MaxGaugeBar;
 
-    private float _gaugeBar;
+    [SerializeField] private float _gaugeBar;
     public float GaugeBar
     {
         get { return _gaugeBar; }

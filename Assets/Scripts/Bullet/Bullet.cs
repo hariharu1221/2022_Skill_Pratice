@@ -4,15 +4,19 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private float speed;
+    private float damage;
+    private EntityType type;
+
+    public void BulletSet(float speed, float damage, EntityType type)
     {
-        
+        this.speed = speed;
+        this.damage = damage;
+        this.type = type;
     }
 
-    // Update is called once per frame
-    void Update()
+    public virtual void BulletUpdate()
     {
-        
+        transform.position += Vector3.forward * Time.deltaTime * speed;
     }
 }

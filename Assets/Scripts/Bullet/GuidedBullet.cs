@@ -2,17 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GuidedBullet : MonoBehaviour
+public class GuidedBullet : Bullet
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public EntityType type;
 
-    // Update is called once per frame
-    void Update()
+    public override void BulletUpdate()
     {
-        
+        base.BulletUpdate();
     }
 }
