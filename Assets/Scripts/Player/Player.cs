@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Player : MonoBehaviour
+public class Player : DestructibleSingleton<Player>
 {
     #region VARIABLE
     //SERIALIZEFIELD
@@ -156,6 +156,11 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(5f);
         speed = originSpeed;
         state = PlayerState.normal;
+    }
+
+    public void GetDamage(float damage)
+    {
+        hpGauge.GaugeBar -= damage;
     }
 }
 

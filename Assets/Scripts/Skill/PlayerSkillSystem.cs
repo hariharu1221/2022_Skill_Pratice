@@ -7,6 +7,8 @@ public class PlayerSkillSystem : DestructibleSingleton<PlayerSkillSystem>
     [SerializeField] private LevelUpUI levelUpUI;
 
     private int level;
+    private int exp;
+    public int EXP { get { return exp; } set { exp = value; StartCoroutine(LevelCheck()); } }
     private bool isLevelUp;
     private List<Skill> skillList;
 
@@ -27,6 +29,19 @@ public class PlayerSkillSystem : DestructibleSingleton<PlayerSkillSystem>
         level = 0;
         isLevelUp = false;
         skillList = new List<Skill>();
+
+       
+    }
+
+    private IEnumerator LevelCheck()
+    {
+        while (exp >= 100)
+        {
+            exp -= 100;
+            LevelUp();
+            yield return new WaitForFixedUpdate();
+        }
+        Debug.Log(exp);
     }
 
     public void LevelUp() //standby

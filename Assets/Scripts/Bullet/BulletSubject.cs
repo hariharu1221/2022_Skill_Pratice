@@ -20,14 +20,10 @@ public class BulletSubject : MonoBehaviour
         if (!bulletGroup) bulletGroup = GameObject.Find("BulletGroup");
     }
 
-    private void Start()
-    {
-        StartCoroutine(ClearBullet());
-    }
-
     private void Update()
     {
         BulletUpdate();
+        DestroyBullet();
     }
 
     private void BulletUpdate()
@@ -35,7 +31,7 @@ public class BulletSubject : MonoBehaviour
         foreach (Bullet bullet in bullets)
         {
             bullet.BulletUpdate();
-            if (Utils.CheckEscape(bullet.gameObject))
+            if (Utils.CheckEscape(bullet.gameObject) || bullet.Hited)
             {
                 deathBullets.Add(bullet);
             }
@@ -50,12 +46,6 @@ public class BulletSubject : MonoBehaviour
             Destroy(bullet.gameObject);
         }
         deathBullets.Clear();
-    }
-
-    private IEnumerator ClearBullet()
-    {
-        DestroyBullet();
-        yield return new WaitForSeconds(3f);
     }
 
     public void AddBullet(Bullet bullet)
