@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BulletSubject : MonoBehaviour
+public class BulletSubject : DestructibleSingleton<BulletSubject>
 {
     private List<Bullet> bullets;
     private List<Bullet> deathBullets;
@@ -10,6 +10,7 @@ public class BulletSubject : MonoBehaviour
 
     private void Awake()
     {
+        SetInstance();
         VariableSet();
     }
 
@@ -30,7 +31,7 @@ public class BulletSubject : MonoBehaviour
     {
         foreach (Bullet bullet in bullets)
         {
-            bullet.BulletUpdate();
+            if (!bullet.isStop) bullet.BulletUpdate();
             if (Utils.CheckEscape(bullet.gameObject) || bullet.Hited)
             {
                 deathBullets.Add(bullet);
@@ -57,5 +58,27 @@ public class BulletSubject : MonoBehaviour
     public void RemoveBullet(Bullet bullet)
     {
         deathBullets.Add(bullet);
+    }
+
+    public void ChangeType(bool isPlayer)
+    {
+        foreach (Bullet bullet in bullets)
+        {
+            if (isPlayer && bullet.Type != EntityType.player)
+            {
+                bullet.Type = EntityType.player;
+                Vector3 pos = bullet.transform.rotation.eulerAngles - new Vector3(0, 180, 0);
+                bullet.transform.rotation = Quaternion.Euler(pos);
+                bullet.SetSprite();
+            }
+        }
+    }
+
+    public void StopBulelt(EntityType type, bool stop)
+    {
+        foreach (Bullet bullet in bullets)
+        {
+            if (bullet.Type == type) bullet.isStop = stop;
+        }
     }
 }

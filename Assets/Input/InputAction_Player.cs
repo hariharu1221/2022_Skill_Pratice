@@ -57,6 +57,14 @@ public class @InputAction_Player : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": ""Press""
+                },
+                {
+                    ""name"": ""Targeting"",
+                    ""type"": ""Button"",
+                    ""id"": ""4e1d3cee-d5b5-4326-8ab1-4259366c881f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Press""
                 }
             ],
             ""bindings"": [
@@ -224,6 +232,17 @@ public class @InputAction_Player : IInputActionCollection, IDisposable
                     ""action"": ""Boosting"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""adcb2b17-b76b-4632-95f4-bbe8c5bc8872"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and Mouse"",
+                    ""action"": ""Targeting"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -265,6 +284,7 @@ public class @InputAction_Player : IInputActionCollection, IDisposable
         m_PlayerControls_Skill = m_PlayerControls.FindAction("Skill", throwIfNotFound: true);
         m_PlayerControls_LowFlying = m_PlayerControls.FindAction("LowFlying", throwIfNotFound: true);
         m_PlayerControls_Boosting = m_PlayerControls.FindAction("Boosting", throwIfNotFound: true);
+        m_PlayerControls_Targeting = m_PlayerControls.FindAction("Targeting", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -319,6 +339,7 @@ public class @InputAction_Player : IInputActionCollection, IDisposable
     private readonly InputAction m_PlayerControls_Skill;
     private readonly InputAction m_PlayerControls_LowFlying;
     private readonly InputAction m_PlayerControls_Boosting;
+    private readonly InputAction m_PlayerControls_Targeting;
     public struct PlayerControlsActions
     {
         private @InputAction_Player m_Wrapper;
@@ -328,6 +349,7 @@ public class @InputAction_Player : IInputActionCollection, IDisposable
         public InputAction @Skill => m_Wrapper.m_PlayerControls_Skill;
         public InputAction @LowFlying => m_Wrapper.m_PlayerControls_LowFlying;
         public InputAction @Boosting => m_Wrapper.m_PlayerControls_Boosting;
+        public InputAction @Targeting => m_Wrapper.m_PlayerControls_Targeting;
         public InputActionMap Get() { return m_Wrapper.m_PlayerControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -352,6 +374,9 @@ public class @InputAction_Player : IInputActionCollection, IDisposable
                 @Boosting.started -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnBoosting;
                 @Boosting.performed -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnBoosting;
                 @Boosting.canceled -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnBoosting;
+                @Targeting.started -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnTargeting;
+                @Targeting.performed -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnTargeting;
+                @Targeting.canceled -= m_Wrapper.m_PlayerControlsActionsCallbackInterface.OnTargeting;
             }
             m_Wrapper.m_PlayerControlsActionsCallbackInterface = instance;
             if (instance != null)
@@ -371,6 +396,9 @@ public class @InputAction_Player : IInputActionCollection, IDisposable
                 @Boosting.started += instance.OnBoosting;
                 @Boosting.performed += instance.OnBoosting;
                 @Boosting.canceled += instance.OnBoosting;
+                @Targeting.started += instance.OnTargeting;
+                @Targeting.performed += instance.OnTargeting;
+                @Targeting.canceled += instance.OnTargeting;
             }
         }
     }
@@ -400,5 +428,6 @@ public class @InputAction_Player : IInputActionCollection, IDisposable
         void OnSkill(InputAction.CallbackContext context);
         void OnLowFlying(InputAction.CallbackContext context);
         void OnBoosting(InputAction.CallbackContext context);
+        void OnTargeting(InputAction.CallbackContext context);
     }
 }

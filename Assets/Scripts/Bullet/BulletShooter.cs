@@ -8,15 +8,12 @@ public class BulletShooter : MonoBehaviour
     public EntityType type;
     private float cool;
     private float speed;
-    private float damage;
-    private GameObject target;
-    [SerializeField] private BulletSubject subject;
+    [HideInInspector] public float damage;
+    private BulletSubject subject;
 
     private void Awake()
     {
         if(!subject) subject = FindObjectOfType<BulletSubject>();
-        if (type == EntityType.enemy) target = Player.Instance.gameObject;
-        else if (type == EntityType.player) target = Player.Instance.gameObject; // 가장 가까운 적
     }
 
     public void Set(float cool, float speed, float damage)
@@ -43,8 +40,9 @@ public class BulletShooter : MonoBehaviour
     private void Fire()
     {
         var n = Instantiate(bullet);
-        n.BulletSet(speed, damage, type, target);
         n.transform.position = transform.position;
+        n.transform.rotation = transform.rotation;
+        n.BulletSet(speed, damage, type);
         subject.AddBullet(n);
     }
 }

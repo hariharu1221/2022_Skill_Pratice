@@ -46,6 +46,13 @@ public class LevelUpUI : MonoBehaviour
             };
     }
 
+    private void ReleaseImage()
+    {
+        Addressables.Release(opOne.handle);
+        Addressables.Release(opTwo.handle);
+        Addressables.Release(opThr.handle);
+    }
+
     private void SelectSkill(Skill skill)
     {
         selectSkill = skill;
@@ -81,7 +88,7 @@ public class LevelUpUI : MonoBehaviour
             cool += Time.deltaTime;
             yield return new WaitForEndOfFrame();
         }
-
+        ReleaseImage();
         gameObject.SetActive(false);
         PlayerSkillSystem.Instance.LevelUpEnd(selectSkill);
     }

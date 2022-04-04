@@ -8,48 +8,52 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float bulletSpeed;
     [SerializeField] private float bulletDamage;
     [SerializeField] private float bulletCool;
-    [SerializeField] private float speed;
+    [SerializeField] protected float speed;
 
     [Header("½ºÅÝ")]
-    [SerializeField] private float hp;
-    public float HP { get { return hp; } }
-    [SerializeField] private int exp;
+    [SerializeField] protected float hp;
+    public float HP { get { return hp; } set { hp = value; } }
+    [SerializeField] protected int exp;
+    [SerializeField] protected float destructDamage;
+    public float DestructDamage { get { return destructDamage; } }
 
     private BulletShooter shooter;
 
-    private void Awake()
+    protected virtual void Awake()
     {
         shooter = GetComponent<BulletShooter>();
         shooter.Set(bulletCool, bulletSpeed, bulletDamage);
     }
 
-    public void EnemyUpdate()
+    public virtual void EnemyUpdate()
     {
         transform.Translate(0, 0, speed * Time.deltaTime);
     }
 
-    private void Check()
+    protected virtual void KillReward()
     {
-        if (hp <= 0) PlayerSkillSystem.Instance.EXP += exp;
+        if (hp > 0) return;
+        PlayerSkillSystem.Instance.EXP += exp;
+        Player.Instance.fuelGauge.GaugeBar += 1;
     }
 
-    private void OnTriggerEnter(Collider other)
+    protected virtual void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("PlayerBullet"))
         {
             Bullet bullet = other.GetComponent<Bullet>();
             hp -= bullet.GetDamage();
-            Check();
+            KillReward();
         }
-
-    }
-
-    private void OnCollisionEnter(Collision other)
-    {
         if (other.gameObject.CompareTag("Player"))
         {
             hp = 0;
-            Check();
+            KillReward();
         }
+    }
+
+    protected virtual void OnCollisionEnter(Collision other)
+    {
+
     }
 }

@@ -7,26 +7,55 @@ public class Bullet : MonoBehaviour
     protected float speed;
     protected float damage;
     protected EntityType type;
+    public EntityType Type { get { return type; } set { type = value; SetTag(); } }
 
     protected bool hited;
     public bool Hited { get { return hited; } }
+    public bool isStop;
 
-    public virtual void BulletSet(float speed, float damage, EntityType type, GameObject target)
+
+    public virtual void BulletSet(float speed, float damage, EntityType type)
     {
         this.speed = speed;
         this.damage = damage;
         this.type = type;
         hited = false;
+        isStop = false;
+
+        SetTag();
+        SetSprite();
+    }
+
+    public void SetSpeed(float speed)
+    {
+        this.speed = speed;
+    }
+
+    public void SetSpeedDelay(float speed, float time)
+    {
+        StartCoroutine(SetSpeedDelayCor(speed, time));
+    }
+
+    private IEnumerator SetSpeedDelayCor(float speed, float time)
+    {
+        yield return new WaitForSeconds(time);
+        this.speed = speed;
+    }
+
+    public void SetSprite()
+    {
+        GameObject pl = gameObject.transform.Find("Player").gameObject;
+        GameObject en = gameObject.transform.Find("Enemy").gameObject;
 
         if (type == EntityType.player)
         {
-            gameObject.tag = "PlayerBullet";
-            transform.rotation = Quaternion.Euler(0, 0, 0);
+            pl.SetActive(true);
+            en.SetActive(false);
         }
         else
         {
-            gameObject.tag = "EnemyBullet";
-            transform.rotation = Quaternion.Euler(0, 180, 0);
+            pl.SetActive(false);
+            en.SetActive(true);
         }
     }
 
@@ -39,24 +68,21 @@ public class Bullet : MonoBehaviour
     {
         if (hited) return 0;
         hited = true;
-        Debug.Log(hited);
         return damage;
     }
-}
-
-public class RotBullet : Bullet
-{
-    public override void BulletSet(float speed, float damage, EntityType type, GameObject target)
+    
+    public virtual void SetTag()
     {
-        base.BulletSet(speed, damage, type, target);
-
-        Vector3 dir = target.transform.position = transform.position;
-        transform.rotation = Quaternion.LookRotation(dir.normalized);
-    }
-
-    public override void BulletUpdate()
-    {
-        transform.Translate(0, 0, speed * Time.deltaTime);
+        if (type == EntityType.player)
+        {
+            gameObject.tag = "PlayerBullet";
+        }
+        else
+        {
+            gameObject.tag = "EnemyBullet";
+            Vector3 pos = transform.rotation.eulerAngles - new Vector3(0, 180, 0);
+            transform.rotation = Quaternion.Euler(pos);
+        }
     }
 }
 

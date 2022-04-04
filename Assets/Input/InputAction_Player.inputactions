@@ -44,6 +44,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "Press"
+                },
+                {
+                    "name": "Targeting",
+                    "type": "Button",
+                    "id": "4e1d3cee-d5b5-4326-8ab1-4259366c881f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press"
                 }
             ],
             "bindings": [
@@ -209,6 +217,17 @@
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "Boosting",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "adcb2b17-b76b-4632-95f4-bbe8c5bc8872",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard and Mouse",
+                    "action": "Targeting",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -23,6 +23,12 @@ MonoBehaviour:
     m_SerializedLabels: []
     m_MainAsset: {fileID: 0}
     m_TargetAsset: {fileID: 0}
+  - m_GUID: 86b4163212806a64fa542eed95c860e5
+    m_Address: RotBullet
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 3e790a5484e8e7a4fab55e944c50cf09, type: 2}
   m_SchemaSet:

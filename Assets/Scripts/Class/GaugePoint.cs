@@ -14,7 +14,7 @@ public class GaugePoint
         set 
         {
             if (_gaugeBar > MaxGaugeBar) _gaugeBar = MaxGaugeBar;
-            else if (_gaugeBar < 0) _gaugeBar = 0;
+            else if (_gaugeBar < -5) _gaugeBar = -5;
             else _gaugeBar = value; 
         }
     }

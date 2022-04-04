@@ -3,29 +3,54 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIManager : Singleton<UIManager>
+public class UIManager : DestructibleSingleton<UIManager>
 {
     [SerializeField] private GaugeBackFront fuelGauge;
     [SerializeField] private GaugeBackFront hpGauge;
     [SerializeField] private Image expGauge;
-    private Player player;
-
-    private void Awake()
-    {
-        player = FindObjectOfType<Player>();
-    }
+    [SerializeField] private Image painGauge;
+    [SerializeField] private Image bossGauge;
+    [SerializeField] private Text misson;
+    [SerializeField] private RectTransform Target;
+    private Boss boss;
 
     void Update()
     {
-        SetGauge(fuelGauge, player.fuelGauge.GaugeBar / player.fuelGauge.MaxGaugeBar);
-        SetGauge(hpGauge, player.hpGauge.GaugeBar / player.hpGauge.MaxGaugeBar);
+        SetGauge(fuelGauge, Player.Instance.fuelGauge.GaugeBar / Player.Instance.fuelGauge.MaxGaugeBar);
+        SetGauge(hpGauge, Player.Instance.hpGauge.GaugeBar / Player.Instance.hpGauge.MaxGaugeBar);
+        SetGauge(expGauge, (float)PlayerSkillSystem.Instance.EXP / (float)PlayerSkillSystem.Instance.MAX_EXP);
+        SetGauge(painGauge, GameManager.Instance.painBar.GaugeBar / GameManager.Instance.painBar.MaxGaugeBar);
+    }
+
+    public void SetMisson(string text)
+    {
+        misson.text = text;
     }
 
     private void SetGauge(GaugeBackFront gauge, float value)
     {
         gauge.front.fillAmount = value;
         gauge.back.fillAmount = Mathf.Lerp(gauge.back.fillAmount, gauge.front.fillAmount, Time.deltaTime * 2f);
-        //if (gauge.front.fillAmount <= fuelGauge.back.fillAmount - 0.001f) gauge.back.fillAmount = gauge.front.fillAmount;
+    }
+
+    private void SetGauge(Image gauge, float value)
+    {
+        gauge.fillAmount = Mathf.Lerp(gauge.fillAmount, value, Time.deltaTime * 4f);
+    }
+
+    public void SetBoss(Boss boss)
+    {
+        this.boss = boss;
+        StartCoroutine(BossUI());
+    }
+
+    IEnumerator BossUI()
+    {
+        while (true)
+        {
+            SetGauge(bossGauge, boss.HP / boss.MaxHp);
+            yield return new WaitForEndOfFrame();
+        }
     }
 }
 

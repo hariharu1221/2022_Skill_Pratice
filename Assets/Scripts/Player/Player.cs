@@ -9,10 +9,6 @@ public class Player : DestructibleSingleton<Player>
     //SERIALIZEFIELD
     [SerializeField] private float originSpeed;
     [SerializeField] private float time;
-    [Header("불렛 조정")]
-    [SerializeField] private float bulletSpeed;
-    [SerializeField] private float bulletDamage;
-    [SerializeField] private float bulletCool;
 
     //VARIABLE
     [HideInInspector] public GaugePoint hpGauge;
@@ -26,11 +22,12 @@ public class Player : DestructibleSingleton<Player>
     [HideInInspector] public ExecutionOrder lowFlyingState;
     [HideInInspector] public ExecutionOrder boostingState;
     [HideInInspector] public Vector2 vec;
+    [HideInInspector] public Quaternion rot;
 
-    private BulletShooter shooter;
+    private bool Invincibility;
 
     //CONST
-    public Vector2 limit { get { return new Vector2(80, 40); } }
+    public Vector2 limit { get { return new Vector2(160, 100); } }
 
     #endregion
 
@@ -46,11 +43,12 @@ public class Player : DestructibleSingleton<Player>
         Boosting();
         GaugeManagement();
         StateManagement();
+        SetRotation();
     }
 
     private void VariableSetting()
     {
-        hpGauge   = new GaugePoint(100, 100);
+        hpGauge   = new GaugePoint(200, 200);
         fuelGauge = new GaugePoint(20, 20);
         painGauge = new GaugePoint(100, 0);
         yPos = 20;
@@ -60,8 +58,7 @@ public class Player : DestructibleSingleton<Player>
         lowFlyingState = ExecutionOrder.none;
         boostingState = ExecutionOrder.none;
 
-        shooter = GetComponent<BulletShooter>();
-        shooter.Set(bulletCool, bulletSpeed, bulletDamage);
+        Invincibility = false;
     }
 
     private void Movement() //움직임
@@ -86,12 +83,12 @@ public class Player : DestructibleSingleton<Player>
         {
             case ExecutionOrder.standby:
                 //내려가는 효과
-                state = PlayerState.invincibility;
                 lowFlyingState = ExecutionOrder.execution;
                 break;
             case ExecutionOrder.execution:
                 transform.position = Vector3.Lerp(transform.position, pos + new Vector3(0, -20, 0), Time.deltaTime * 5);
                 fuelGauge.GaugeBar -= Time.deltaTime * 4f;
+                state = PlayerState.invincibility;
                 break;
             case ExecutionOrder.end:
                 //올라가는 효과
@@ -137,6 +134,11 @@ public class Player : DestructibleSingleton<Player>
         }
     }
 
+    private void SetRotation()
+    {
+        transform.rotation = rot;
+    }
+
     private void StateManagement()
     {
         switch (state)
@@ -158,9 +160,46 @@ public class Player : DestructibleSingleton<Player>
         state = PlayerState.normal;
     }
 
+
     public void GetDamage(float damage)
     {
+        if (Invincibility || state == PlayerState.invincibility) return;
         hpGauge.GaugeBar -= damage;
+        if (Invincibility) return;
+        StartCoroutine(InvincibilityBuff(1.5f));
+    }
+
+    public IEnumerator InvincibilityBuff(float time)
+    {
+        float cool = 0;
+        while (cool < time)
+        {
+            Invincibility = true;
+            cool += Time.deltaTime;
+            yield return new WaitForFixedUpdate();
+            Debug.Log("무적");
+        }
+        Invincibility = false;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("EnemyBullet"))
+        {
+            GetDamage(other.GetComponent<Bullet>().GetDamage());
+        }
+        if (other.gameObject.CompareTag("Enemy"))
+        {
+            GetDamage(other.gameObject.GetComponent<Enemy>().DestructDamage);
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject.CompareTag("Boss"))
+        {
+            GetDamage(other.GetComponent<Boss>().DestructDamage);
+        }
     }
 }
 
