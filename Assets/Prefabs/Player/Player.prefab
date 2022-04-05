@@ -244,6 +244,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72223c126b832bd41baf94809d9e91e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  camera: {fileID: 0}
+  targetImage: {fileID: 0}
 --- !u!114 &7095268646404392610
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -287,6 +289,7 @@ MonoBehaviour:
   lowFlyingState: 0
   boostingState: 0
   vec: {x: 0, y: 0}
+  rot: {x: 0, y: 0, z: 0, w: 0}
 --- !u!65 &7095268646404392671
 BoxCollider:
   m_ObjectHideFlags: 0

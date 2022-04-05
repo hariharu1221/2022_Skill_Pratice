@@ -49,9 +49,9 @@ public abstract class Skill
             };
     }
 
-    protected Bullet InstantiateBullet(int bulletSpeed = 100)
+    protected Bullet InstantiateBullet(BulletType type, int bulletSpeed = 100)
     {
-        var b = GameObject.Instantiate(bullet).GetComponent<Bullet>();
+        var b = BulletPool.Instance.InstantiateBullet(type);
         b.transform.position = Player.Instance.transform.position;
         b.BulletSet(bulletSpeed, Damage, EntityType.player);
         BulletSubject.Instance.AddBullet(b);
@@ -59,9 +59,9 @@ public abstract class Skill
         return b;
     }
 
-    protected Bullet InstantiateBullet_noadd(Vector3 pos, int bulletSpeed = 100)
+    protected Bullet InstantiateBullet_noadd(BulletType type, Vector3 pos, int bulletSpeed = 100)
     {
-        var b = GameObject.Instantiate(bullet).GetComponent<Bullet>();
+        var b = BulletPool.Instance.InstantiateBullet(type);
         b.transform.position = pos;
         b.BulletSet(bulletSpeed, Damage, EntityType.player);
 
@@ -126,7 +126,7 @@ public class Skill_Zero : Skill
                 rotY += 30;
                 if (rotY >= 360) rotY = 0;
 
-                var b = InstantiateBullet();
+                var b = InstantiateBullet(BulletType.bullet);
                 b.transform.rotation = Quaternion.Euler(new Vector3(0, rotY, 0));
 
                 time += 0.1f;
@@ -183,7 +183,7 @@ public class SKill_One : Skill
         {
             for (int i = 0; i < number_of_bullet; i++)
             {
-                var b = InstantiateBullet();
+                var b = InstantiateBullet(BulletType.bullet);
                 b.transform.rotation = Quaternion.Euler(new Vector3(0, (i / number_of_bullet) * 360, 0));
             }
             yield return new WaitForSeconds(cool);
@@ -230,9 +230,6 @@ public class Skill_Two : Skill
 
     public override IEnumerator Passive()
     {
-        LoadBullet();
-        yield return new WaitForSeconds(1f);
-
         while (true)
         {
             List<Bullet> bullets = new List<Bullet>();
@@ -240,7 +237,7 @@ public class Skill_Two : Skill
             for (int i = 0; i < number_of_bullet; i++)
             {
                 Vector3 pos = new Vector3(-80 + (160 * i / number_of_bullet), 20, Player.Instance.transform.position.z - 10);
-                var b = InstantiateBullet_noadd(pos);
+                var b = InstantiateBullet_noadd(BulletType.rotBullet, pos);
                 bullets.Add(b);
 
                 yield return new WaitForSeconds(0.05f);
@@ -303,7 +300,7 @@ public class Skill_Three : Skill
             float time = 0;
             while (time < maxTime)
             {
-                var b = InstantiateBullet(250);
+                var b = InstantiateBullet(BulletType.rotBullet ,250);
                 time += 0.1f;
                 yield return new WaitForSeconds(0.1f);
             }

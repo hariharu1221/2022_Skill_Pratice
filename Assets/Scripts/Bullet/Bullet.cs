@@ -80,15 +80,11 @@ public class Bullet : MonoBehaviour
         else
         {
             gameObject.tag = "EnemyBullet";
-            Vector3 pos = transform.rotation.eulerAngles - new Vector3(0, 180, 0);
-            transform.rotation = Quaternion.Euler(pos);
         }
     }
-}
 
-public enum BulletType
-{
-    bullet,
-    rotBullet,
-    guidedBullet
+    private void OnDisable()
+    {
+        BulletPool.Instance.ReturnToPool(this);
+    }
 }

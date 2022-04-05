@@ -44,7 +44,7 @@ public class BulletSubject : DestructibleSingleton<BulletSubject>
         foreach (Bullet bullet in deathBullets)
         {
             bullets.Remove(bullet);
-            Destroy(bullet.gameObject);
+            bullet.gameObject.SetActive(false);
         }
         deathBullets.Clear();
     }

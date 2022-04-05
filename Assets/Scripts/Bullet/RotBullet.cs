@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class RotBullet : Bullet
 {
-
-
     public override void SetTag()
     {
         GameObject target;
@@ -37,5 +35,10 @@ public class RotBullet : Bullet
     public override void BulletUpdate()
     {
         transform.Translate(0, 0, speed * Time.deltaTime);
+    }
+
+    private void OnDisable()
+    {
+        BulletPool.Instance.ReturnToRotPool(this);
     }
 }

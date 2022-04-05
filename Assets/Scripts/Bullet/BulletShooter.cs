@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BulletShooter : MonoBehaviour
 {
-    public Bullet bullet;
+    public BulletType bullet;
     public EntityType type;
     private float cool;
     private float speed;
@@ -39,7 +39,7 @@ public class BulletShooter : MonoBehaviour
 
     private void Fire()
     {
-        var n = Instantiate(bullet);
+        var n = BulletPool.Instance.InstantiateBullet(bullet);
         n.transform.position = transform.position;
         n.transform.rotation = transform.rotation;
         n.BulletSet(speed, damage, type);
@@ -52,4 +52,11 @@ public enum EntityType
     player,
     enemy,
     boss
+}
+
+public enum BulletType
+{
+    bullet,
+    rotBullet,
+    toBullet
 }
