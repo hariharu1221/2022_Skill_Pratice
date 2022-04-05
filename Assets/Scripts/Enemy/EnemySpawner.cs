@@ -36,7 +36,6 @@ public class EnemySpawner : MonoBehaviour
             Check();
 
             Vector3 vec = new Vector3(Random.Range(-fx, fx + 1), fy, fz + transform.position.z);
-            Debug.Log(transform.position.z);
             int index = Random.Range(0, enemies.Count);
             Spawn(vec, index);
 

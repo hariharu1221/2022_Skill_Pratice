@@ -39,6 +39,7 @@ public class RotBullet : Bullet
 
     private void OnDisable()
     {
-        BulletPool.Instance.ReturnToRotPool(this);
+        if (BulletPool.Instance != null)
+            BulletPool.Instance.ReturnToRotPool(this);
     }
 }

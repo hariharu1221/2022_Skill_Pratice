@@ -7,6 +7,10 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
     {
         get
         {
+            if (isDestroy)
+            {
+                return null;
+            }
             if (instance == null)
             {
                 instance = FindObjectOfType(typeof(T)) as T;
@@ -19,6 +23,12 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
         }
     }
 
+    private static bool isDestroy = false;
+    private void OnDestroy()
+    {
+        isDestroy = true;
+    }
+
     public void SetInstance()
     {
         if (instance != null)
@@ -32,6 +42,7 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
             instance = FindObjectOfType(typeof(T)) as T;
             if (instance == null)
                 instance = new GameObject("[ " + typeof(T).Name + " ]").AddComponent<T>();
+            isDestroy = false;
             DontDestroyOnLoad(instance.gameObject);
         }
     }
@@ -44,6 +55,10 @@ public class DestructibleSingleton<T> : MonoBehaviour where T : MonoBehaviour
     {
         get
         {
+            if (isDestroy)
+            {
+                return null;
+            }
             if (instance == null)
             {
                 instance = FindObjectOfType(typeof(T)) as T;
@@ -53,6 +68,12 @@ public class DestructibleSingleton<T> : MonoBehaviour where T : MonoBehaviour
 
             return instance;
         }
+    }
+
+    private static bool isDestroy = false;
+    private void OnDestroy()
+    {
+        isDestroy = true;
     }
 
     public void SetInstance()
@@ -68,6 +89,7 @@ public class DestructibleSingleton<T> : MonoBehaviour where T : MonoBehaviour
             instance = FindObjectOfType(typeof(T)) as T;
             if (instance == null)
                 instance = new GameObject("[ " + typeof(T).Name + " ]").AddComponent<T>();
+            isDestroy = false;
         }
     }
 }

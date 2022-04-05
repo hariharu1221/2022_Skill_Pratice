@@ -85,6 +85,7 @@ public class Bullet : MonoBehaviour
 
     private void OnDisable()
     {
-        BulletPool.Instance.ReturnToPool(this);
+        if (BulletPool.Instance != null)
+            BulletPool.Instance.ReturnToPool(this);
     }
 }
