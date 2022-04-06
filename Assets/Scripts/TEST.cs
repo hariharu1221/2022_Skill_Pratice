@@ -91,9 +91,42 @@ public class Test : MonoBehaviour
 
     //게임 오버시 => player.hp <= 0 || painbar >= 100 update 통해서 UI 띄우기 && 더 이상 실행 할 수 없게 bool로 체크 =>
     //UI에서 버튼 누르면 => 스코어 ADD 후 스코어 초기화 및 정렬 랭킹화면으로
-    //
+
+    public void GameOver()
+    {
+        // if (over) return;
+        // over true;
+        // UI open;
+    }
+
+    public void OverButton()
+    {
+        // ScoreManager.Instance.EndGame(score);
+        SceneManager.LoadScene(3);
+    }
+
     //보스 처치시 => boss.isDead > update 통해서 UI 띄우기  &&  더 이상 실행 할 수 없게 bool로 체크 =>
     //UI에서 버튼 누르면 => 스코어 Plus 후 다음 씬으로
+
+    public void Clear()
+    {
+        // if (over) return;
+        // over true;
+        // UI open;
+    }
+
+    public void NextScene()
+    {
+        if (SceneManager.GetActiveScene().buildIndex == 1)
+        {
+            // ScoreManager.Instance.PlusScore(score)
+            SceneManager.LoadScene(2);
+        }
+        else if (SceneManager.GetActiveScene().buildIndex == 2)
+        {
+            OverButton();
+        }
+    }
 
 
     //잡몹 hp 및 맞을때 스프라이트
