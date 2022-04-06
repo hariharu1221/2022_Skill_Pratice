@@ -6,7 +6,7 @@ public class Red : Enemy
 {
     protected override void Awake()
     {
-
+        hp = maxHp;
     }
 
     public override void EnemyUpdate()

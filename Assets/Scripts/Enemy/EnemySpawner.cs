@@ -48,7 +48,7 @@ public class EnemySpawner : MonoBehaviour
     {
         var n = Instantiate(enemies[index]);
         n.transform.position = vec;
-        n.GetComponent<Enemy>().HP *= enemyHpMult;
+        n.HpMult(enemyHpMult);
         subject.AddEnemy(n);
     }
 

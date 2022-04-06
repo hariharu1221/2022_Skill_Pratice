@@ -1,0 +1,34 @@
+씬 연결
+gameobject.SetActive(true);
+button.addliste;;
+
+bool
+
+보스, 레이저 도트
+
+아이템
+
+잡몹 hp
+
+스코어 창
+EndGame(int score)
+{
+nowScore += score;
+Scores.Add(nowScore);
+}
+
+보스 ui
+보스 패턴
+pattern
+
+
+잡몹 패턴
+bosspattern one
+
+스킬
+pattern one
+
+치트
+
+
+남으면 파티클

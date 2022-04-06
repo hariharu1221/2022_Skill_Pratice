@@ -19,6 +19,11 @@ public class Boss : MonoBehaviour
     [Header("ºÒ·¿")]
     [SerializeField] protected Bullet bullet;
     [SerializeField] protected Bullet rotBullet;
+    [SerializeField] protected ToBullet ToBullet;
+
+    [Header("ÀÌ¹ÌÁö")]
+    [SerializeField] private GameObject Sprite;
+    [SerializeField] private GameObject HitSprite;
 
     public float HP { get { return hp; } set { hp = value; } }
     public float MaxHp { get { return maxHP; } }
@@ -59,20 +64,21 @@ public class Boss : MonoBehaviour
     private IEnumerator Pattern()
     {
         yield return ToMove(transform.position, new Vector3(0, 20, nz), 3f);
+
+        int count = 0;
         while (true)
         {
-            int random = Random.Range(0, 6);
 
-            switch(random)
+            switch(count)
             {
                 case 0:
                     yield return ToMove(transform.position, new Vector3(Player.Instance.transform.position.x, ny, nz), 2f);
                     break;
                 case 1:
-                    yield return pOne();
+                    yield return pEig();
                     break;
                 case 2:
-                    yield return pTwo();
+                    yield return pSix();
                     break;
                 case 3:
                     yield return pThr();
@@ -84,11 +90,14 @@ public class Boss : MonoBehaviour
                     yield return pFiv();
                     break;
             }
+            count++;
 
+            if (count >= 6) count = 0;
             yield return new WaitForSeconds(1f);
         }
     }
 
+    #region PATTERN
     private IEnumerator pOne()
     {
         yield return ToMove(transform.position, new Vector3(Player.Instance.transform.position.x, ny, nz), 0.5f);
@@ -172,9 +181,93 @@ public class Boss : MonoBehaviour
         }
     }
 
+    private IEnumerator pSix()
+    {
+        float number_of_bullet = 7;
+        StartCoroutine(ToMove(transform.position, new Vector3(Player.Instance.transform.position.x, ny, nz), 1f));
+
+        float alpha = 0;
+        float cool = 0;
+        for (int k = 0; k < (360 / 5) * 6; k++)
+        {
+            for (int i = 0; i < number_of_bullet; i++)
+            {
+                var b = InstantiateBullet(80, bulletDamage, transform.position);
+                b.transform.rotation = Quaternion.Euler(new Vector3(0, ((float)(i) / number_of_bullet) * 360f + alpha * 360, 0));
+            }
+            alpha = Mathf.Sin(cool / 2f);
+            cool += 0.02f;
+            yield return new WaitForSeconds(0.02f);
+        }
+    }
+
+    private IEnumerator pSev()
+    {
+        float number_of_bullet = 25;
+        StartCoroutine(ToMove(transform.position, new Vector3(Player.Instance.transform.position.x, ny, nz), 1f));
+
+        for (int k = 0; k < 40; k++)
+        {
+            for (int i = 0; i < number_of_bullet; i++)
+            {
+                var b = InstantiateToBullet(100, bulletDamage, transform.position);
+                b.transform.rotation = Quaternion.Euler(new Vector3(0, ((float)(i) / number_of_bullet) * 360f, 0));
+
+                b.ToFastSpeed = 10;
+
+                b.ToRot = b.transform.rotation.eulerAngles;
+                b.ToFast = 100;
+
+                Vector3 Rot = Utils.TargetRotation(b.transform.position, Player.Instance.transform.position);
+                b.DelayToRotSet(Rot, 30, 0.1f);
+                b.DelayToFastSet(120, 30, 0.1f);
+            }
+            
+            yield return new WaitForSeconds(0.05f);
+        }
+    }
+
+    private IEnumerator pEig()
+    {
+        float number_of_bullet = 40;
+        StartCoroutine(ToMove(transform.position, new Vector3(Player.Instance.transform.position.x, ny, nz), 1f));
+
+        for (int k = 0; k < 8; k++)
+        {
+            for (int i = 0; i < number_of_bullet; i++)
+            {
+                var b = InstantiateToBullet(90, bulletDamage, transform.position);
+                b.transform.rotation = Quaternion.Euler(new Vector3(0, ((float)(i) / number_of_bullet) * 360f, 0));
+
+                b.ToRot = b.transform.rotation.eulerAngles;
+                b.ToFast = 170;
+                b.ToFastSpeed = 50;
+
+                b.SetSpeedDelay(0, 0.4f);
+                b.DelayToFastSet(0, 30, 0.4f);
+
+                b.DelayToFastSet(150, 10, 0.7f);
+                b.DelayToRotSet(Player.Instance.gameObject, 30, 0.7f);
+            }
+
+            yield return new WaitForSeconds(0.8f);
+        }
+    }
+    #endregion
+
     private Bullet InstantiateBullet(float speed, float damage, Vector3 pos)
     {
         var b = GameObject.Instantiate(bullet);
+        b.BulletSet(speed, damage, EntityType.boss);
+        b.transform.position = pos;
+        BulletSubject.Instance.AddBullet(b);
+
+        return b;
+    }
+
+    private ToBullet InstantiateToBullet(float speed, float damage, Vector3 pos)
+    {
+        var b = GameObject.Instantiate(ToBullet);
         b.BulletSet(speed, damage, EntityType.boss);
         b.transform.position = pos;
         BulletSubject.Instance.AddBullet(b);
@@ -195,7 +288,18 @@ public class Boss : MonoBehaviour
         {
             Bullet bullet = other.GetComponent<Bullet>();
             hp -= bullet.GetDamage();
+
+            Sprite.SetActive(false);
+            HitSprite.SetActive(true);
+            Invoke("ReturnSprite", 0.05f);
+
             KillReward();
         }
     }   
+
+    private void ReturnSprite()
+    {
+        Sprite.SetActive(true);
+        HitSprite.SetActive(false);
+    }
 }

@@ -10,7 +10,7 @@ public class GameManager : DestructibleSingleton<GameManager>
     private bool isOnBoss;
     public bool IsOnBoss { get { return isOnBoss; } }
 
-    private int maxDisCount = 200;
+    private int maxDisCount = 5;
     private Camera camera;
 
     private void Awake()

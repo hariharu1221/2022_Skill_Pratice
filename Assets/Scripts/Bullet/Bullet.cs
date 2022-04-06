@@ -61,7 +61,7 @@ public class Bullet : MonoBehaviour
 
     public virtual void BulletUpdate()
     {
-        transform.Translate(0, 0, speed * Time.deltaTime);
+        transform.Translate(0, 0, this.speed * Time.deltaTime);
     }
 
     public float GetDamage()

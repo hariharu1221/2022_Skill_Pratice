@@ -6,7 +6,7 @@ public class White : Enemy
 {
     protected override void Awake()
     {
-
+        hp = maxHp;
     }
 
     public override void EnemyUpdate()
