@@ -54,6 +54,14 @@ public class EnemySubject : DestructibleSingleton<EnemySubject>
         deathEnemies.Clear();
     }
 
+    public void AllDestroy()
+    {
+        foreach (Enemy enemy in enemies)
+        {
+            deathEnemies.Add(enemy);
+        }
+    }
+
     public void AddEnemy(Enemy enemy)
     {
         enemy.transform.SetParent(enemyGroup.transform);
